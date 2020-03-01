@@ -1,2 +1,2 @@
 # 0MQ_PubSub
-A simple snippet sample of ZeroMQ Publiser/Subscriber for C
+A simple snippet sample of ZeroMQ Publisher/Subscriber for C
