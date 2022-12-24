@@ -7,8 +7,9 @@
 import sys
 import zmq
 
-if(not(len(sys.argv) == 7 or len(sys.argv) == 4)):
+if(not(len(sys.argv) == 4 or len(sys.argv) == 5 or len(sys.argv) == 7)):
 	print("Usage:\n\tsys.argv[0] <SERVER> <SERVER_PORT> <TOPIC>")
+	print("\tsys.argv[0] <SERVER 1> <SERVER_PORT_1> <TOPIC 1_1> <TOPIC 1_2>")
 	print("\tsys.argv[0] <SERVER 1> <SERVER_PORT_1> <TOPIC 1> <SERVER 2> <SERVER_PORT_2> <TOPIC 2>\n")
 	sys.exit()
 
@@ -16,16 +17,23 @@ hasSecondServer = False
 if(len(sys.argv) == 7):
 	hasSecondServer = True
 
+hasTwoTopics = False
+if(len(sys.argv) == 5):
+	hasTwoTopics = True
+	topic12 = sys.argv[4]
+
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
 
 server1 = sys.argv[1]
 port1 = int(sys.argv[2])
-topic1 = sys.argv[3]
+topic11 = sys.argv[3]
 
-print(f"Collecting updates from [{server1}] (1) on port [{port1}] with [{topic1}].")
+print(f"Collecting updates from [{server1}] (1) on port [{port1}] with [{topic11}].")
 socket.connect("tcp://{}:{}".format(server1, port1))
-socket.setsockopt(zmq.SUBSCRIBE, topic1.encode('utf-8'))
+socket.setsockopt(zmq.SUBSCRIBE, topic11.encode('utf-8'))
+if(hasTwoTopics == True):
+	socket.setsockopt(zmq.SUBSCRIBE, topic12.encode('utf-8'))
 
 if(hasSecondServer == True):
 	server2 = sys.argv[4]
